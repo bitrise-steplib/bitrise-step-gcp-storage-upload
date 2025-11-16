@@ -1,0 +1,70 @@
+---
+title: Google Cloud Storage Upload
+summary: The Step uploads files to a Google Cloud Storage bucket.
+description: |-
+  The Step uploads files to a Google Cloud Storage bucket.
+
+  It can handle both files and directories, uploading the contents to the specified GCS bucket with the desired access control settings.
+
+  Using the Authenticate with GCP Step beforehand is recommended to securely provide short lived GCP credentials.
+website: https://github.com/bitrise-steplib/bitrise-step-gcp-storage-upload
+source_code_url: https://github.com/bitrise-steplib/bitrise-step-gcp-storage-upload
+support_url: https://github.com/bitrise-steplib/bitrise-step-gcp-storage-upload/issues
+
+type_tags:
+- utility
+
+toolkit:
+  go:
+    package_name: github.com/bitrise-steplib/bitrise-step-gcp-storage-upload
+
+inputs:
+- path:
+  opts:
+    title: Path
+    summary: Path to a file or folder to be uploaded.
+    description: |-
+      Path to a file or folder to be uploaded.
+
+      You can use absolute or relative paths.
+    is_required: true
+
+- bucket_name:
+  opts:
+    title: Bucket Name
+    summary: Name of the GCS bucket to upload the file to.
+    description: |-
+      Name of the GCS bucket to upload the file to.
+    is_required: true
+
+- bucket_prefix:
+  opts:
+    title: Bucket Prefix
+    summary: Path in the GCS bucket where the file will be uploaded.
+    description: |-
+      Path in the GCS bucket where the file will be uploaded.
+
+      If not provided, the file will be uploaded to the root of the bucket with its original filename.
+    is_required: false
+
+- access_token: $GOOGLE_AUTH_TOKEN
+  opts:
+    category: GCP Credentials
+    title: AWS Access Key ID
+    summary: The AWS Access Key ID.
+    description: |-
+      The AWS Access Key ID.
+
+      You can provide it directly or use the Authenticate with AWS Step.
+    is_required: true
+    is_dont_change_value: true
+
+- verbose: "false"
+  opts:
+    category: Debug
+    title: Enable verbose logging
+    summary: Enable logging additional information for debugging.
+    is_required: true
+    value_options:
+    - "true"
+    - "false"
