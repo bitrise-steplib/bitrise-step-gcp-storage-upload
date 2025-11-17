@@ -21,7 +21,6 @@ func (u Uploader) collectItems(path string) ([]Item, error) {
 			return walkErr
 		}
 		if d.IsDir() {
-			// S3 does not require creating directories; they are implied by keys.
 			return nil
 		}
 
