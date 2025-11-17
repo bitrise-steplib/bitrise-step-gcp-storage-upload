@@ -50,12 +50,12 @@ inputs:
 - access_token: $GOOGLE_AUTH_TOKEN
   opts:
     category: GCP Credentials
-    title: AWS Access Key ID
-    summary: The AWS Access Key ID.
+    title: GCP Access Token
+    summary: The GCP Access Token.
     description: |-
-      The AWS Access Key ID.
+      The GCP Access Token.
 
-      You can provide it directly or use the Authenticate with AWS Step.
+      You can provide it directly or use the Authenticate with GCP Step.
     is_required: true
     is_dont_change_value: true
 
