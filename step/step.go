@@ -94,19 +94,3 @@ func (u Uploader) Run(config Config) error {
 
 	return nil
 }
-
-//func prepareFile(f *os.File) (io.Reader, string) {
-//	var contentType string
-//
-//	head := make([]byte, 512)
-//	n, err := io.ReadFull(f, head)
-//	if err != nil && !errors.Is(err, io.ErrUnexpectedEOF) {
-//		contentType = "application/octet-stream"
-//	} else {
-//		head = head[:n]
-//		contentType = http.DetectContentType(head)
-//	}
-//
-//	// Put the bytes back in front of the remaining stream.
-//	return io.MultiReader(bytes.NewReader(head), f), contentType
-//}
