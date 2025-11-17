@@ -30,7 +30,7 @@ You can also run this step directly with [Bitrise CLI](https://github.com/bitris
 | `path` | Path to a file or folder to be uploaded.  You can use absolute or relative paths. | required |  |
 | `bucket_name` | Name of the GCS bucket to upload the file to. | required |  |
 | `bucket_prefix` | Path in the GCS bucket where the file will be uploaded.  If not provided, the file will be uploaded to the root of the bucket with its original filename. |  |  |
-| `access_token` | The AWS Access Key ID.  You can provide it directly or use the Authenticate with AWS Step. | required | `$GOOGLE_AUTH_TOKEN` |
+| `access_token` | The GCP Access Token.  You can provide it directly or use the Authenticate with GCP Step. | required, sensitive | `$GOOGLE_AUTH_TOKEN` |
 | `verbose` | Enable logging additional information for debugging. | required | `false` |
 </details>
 
