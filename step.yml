@@ -57,6 +57,7 @@ inputs:
 
       You can provide it directly or use the Authenticate with GCP Step.
     is_required: true
+    is_sensitive: true
     is_dont_change_value: true
 
 - verbose: "false"
