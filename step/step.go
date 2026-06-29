@@ -60,7 +60,7 @@ func (u Uploader) Run(config Config) error {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx, option.WithTokenSource(ts))
 	if err != nil {
-		return fmt.Errorf("failed to create storage client: %w", err)
+		return fmt.Errorf("create storage client: %w", err)
 	}
 	defer func(client *storage.Client) {
 		if err := client.Close(); err != nil {
@@ -73,7 +73,7 @@ func (u Uploader) Run(config Config) error {
 
 		f, err := os.Open(item.Path)
 		if err != nil {
-			return fmt.Errorf("failed to open %s: %w", item.Path, err)
+			return fmt.Errorf("open %s: %w", item.Path, err)
 		}
 
 		bucketPath := filepath.Join(config.BucketPrefix, item.Key)
@@ -88,10 +88,10 @@ func (u Uploader) Run(config Config) error {
 		}
 
 		if copyErr != nil {
-			return fmt.Errorf("failed to upload %s to gs://%s/%s: %w", item.Path, config.BucketName, bucketPath, copyErr)
+			return fmt.Errorf("upload %s to gs://%s/%s: %w", item.Path, config.BucketName, bucketPath, copyErr)
 		}
 		if closeErr != nil {
-			return fmt.Errorf("failed to finalize %s on gs://%s/%s: %w", item.Path, config.BucketName, bucketPath, closeErr)
+			return fmt.Errorf("finalize %s on gs://%s/%s: %w", item.Path, config.BucketName, bucketPath, closeErr)
 		}
 		u.logger.Debugf("Successfully uploaded file: %s", item.Key)
 	}
