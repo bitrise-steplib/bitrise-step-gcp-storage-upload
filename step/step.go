@@ -73,7 +73,7 @@ func (u Uploader) Run(config Config) error {
 
 		f, err := os.Open(item.Path)
 		if err != nil {
-			return fmt.Errorf("open %s: %w", item.Path, err)
+			return fmt.Errorf("failed to open %s: %w", item.Path, err)
 		}
 
 		bucketPath := filepath.Join(config.BucketPrefix, item.Key)
@@ -81,16 +81,22 @@ func (u Uploader) Run(config Config) error {
 		w.ContentType = item.ContentType
 
 		_, copyErr := io.Copy(w, f)
-		_ = w.Close() // close writer to finalize the upload
+		closeErr := w.Close() // GCS finalizes the upload (and returns server errors) here
 
-		if closeErr := f.Close(); closeErr != nil {
-			u.logger.Warnf("Failed to close file %s: %s", item.Path, closeErr)
+		if fErr := f.Close(); fErr != nil {
+			u.logger.Warnf("Failed to close file %s: %s", item.Path, fErr)
 		}
 
 		if copyErr != nil {
-			return fmt.Errorf("upload %s: %w", item.Path, err)
+			return fmt.Errorf("failed to upload %s to gs://%s/%s: %w", item.Path, config.BucketName, bucketPath, copyErr)
 		}
+		if closeErr != nil {
+			return fmt.Errorf("failed to finalize %s on gs://%s/%s: %w", item.Path, config.BucketName, bucketPath, closeErr)
+		}
+		u.logger.Debugf("Successfully uploaded file: %s", item.Key)
 	}
+
+	u.logger.Infof("Uploaded %d file(s) to gs://%s", len(items), filepath.Join(config.BucketName, config.BucketPrefix))
 
 	return nil
 }
