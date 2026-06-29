@@ -4,6 +4,8 @@
 
 The Step uploads files to a Google Cloud Storage bucket.
 
+❗ There's no retry logic implemented in this step at this point. A failed object upload halts the whole upload process.
+
 <details>
 <summary>Description</summary>
 
