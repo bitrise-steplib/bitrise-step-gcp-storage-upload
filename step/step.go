@@ -60,7 +60,7 @@ func (u Uploader) Run(config Config) error {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx, option.WithTokenSource(ts))
 	if err != nil {
-		return fmt.Errorf("failed to create storage client: %w", err)
+		return fmt.Errorf("create storage client: %w", err)
 	}
 	defer func(client *storage.Client) {
 		if err := client.Close(); err != nil {
@@ -81,16 +81,22 @@ func (u Uploader) Run(config Config) error {
 		w.ContentType = item.ContentType
 
 		_, copyErr := io.Copy(w, f)
-		_ = w.Close() // close writer to finalize the upload
+		closeErr := w.Close() // GCS finalizes the upload (and returns server errors) here
 
-		if closeErr := f.Close(); closeErr != nil {
-			u.logger.Warnf("Failed to close file %s: %s", item.Path, closeErr)
+		if fErr := f.Close(); fErr != nil {
+			u.logger.Warnf("Failed to close file %s: %s", item.Path, fErr)
 		}
 
 		if copyErr != nil {
-			return fmt.Errorf("upload %s: %w", item.Path, err)
+			return fmt.Errorf("upload %s to gs://%s/%s: %w", item.Path, config.BucketName, bucketPath, copyErr)
 		}
+		if closeErr != nil {
+			return fmt.Errorf("finalize %s on gs://%s/%s: %w", item.Path, config.BucketName, bucketPath, closeErr)
+		}
+		u.logger.Debugf("Successfully uploaded file: %s", item.Key)
 	}
+
+	u.logger.Infof("Uploaded %d file(s) to gs://%s", len(items), filepath.Join(config.BucketName, config.BucketPrefix))
 
 	return nil
 }
